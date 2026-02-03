@@ -1,6 +1,8 @@
 package com.astap.pexelsapp.domain
 
-class GetPhotosByTopicUseCase(
+import javax.inject.Inject
+
+class GetPhotosByTopicUseCase @Inject constructor(
     private val repository: PhotosRepository
 ) {
 

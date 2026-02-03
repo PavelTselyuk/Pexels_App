@@ -1,6 +1,8 @@
 package com.astap.pexelsapp.domain
 
-class GetPhotoFromHomePageUseCase(
+import javax.inject.Inject
+
+class GetPhotoFromHomePageUseCase @Inject constructor(
     private val repository: PhotosRepository
 ) {
 

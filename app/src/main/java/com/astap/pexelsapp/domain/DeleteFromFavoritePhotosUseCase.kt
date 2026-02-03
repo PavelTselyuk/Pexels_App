@@ -1,6 +1,8 @@
 package com.astap.pexelsapp.domain
 
-class DeleteFromFavoritePhotosUseCase(
+import javax.inject.Inject
+
+class DeleteFromFavoritePhotosUseCase @Inject constructor(
     private val repository: PhotosRepository
 ) {
 

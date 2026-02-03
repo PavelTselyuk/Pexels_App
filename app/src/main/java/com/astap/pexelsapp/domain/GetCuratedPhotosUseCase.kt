@@ -1,6 +1,8 @@
 package com.astap.pexelsapp.domain
 
-class GetCuratedPhotosUseCase(
+import javax.inject.Inject
+
+class GetCuratedPhotosUseCase @Inject constructor(
     private val repository: PhotosRepository
 ) {
 

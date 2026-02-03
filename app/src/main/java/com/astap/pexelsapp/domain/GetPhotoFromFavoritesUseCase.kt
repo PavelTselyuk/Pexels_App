@@ -1,6 +1,8 @@
 package com.astap.pexelsapp.domain
 
-class GetPhotoFromFavoritesUseCase(
+import javax.inject.Inject
+
+class GetPhotoFromFavoritesUseCase @Inject constructor(
     private val repository: PhotosRepository
 ) {
 
