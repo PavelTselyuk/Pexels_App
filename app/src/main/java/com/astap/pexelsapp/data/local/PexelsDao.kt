@@ -1,16 +1,15 @@
 package com.astap.pexelsapp.data.local
 
 import androidx.room.Dao
-import androidx.room.Delete
 import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
 import androidx.room.Transaction
-import com.astap.pexelsapp.domain.Photo
 import kotlinx.coroutines.flow.Flow
 
 @Dao
 interface PexelsDao {
+
 
     @Query("SELECT * FROM topics")
     fun getTopics(): Flow<List<TopicDbModel>>
@@ -27,12 +26,27 @@ interface PexelsDao {
         addTopics(topics)
     }
 
-    @Query("SELECT * FROM photos WHERE isFavorite == 1")
+    @Query("SELECT * FROM photos WHERE isFavourite == 1")
     fun getFavoritePhotos(): Flow<List<PhotoDbModel>>
 
     @Query("SELECT * FROM photos WHERE id == :id")
-    suspend fun getPhotoFromFavorites(id: Int): PhotoDbModel
+    suspend fun getPhotoById(id: Int): PhotoDbModel
 
-    @Delete
-    suspend fun deletePhotoFromFavorites(photoDbModel: PhotoDbModel)
+    @Query("DELETE FROM photos WHERE id ==:photoId")
+    suspend fun deletePhotoFromFavorites(photoId: Int)
+
+    @Insert(onConflict = OnConflictStrategy.IGNORE)
+    suspend fun addCuratedPhotos(curatedPhotos: List<PhotoDbModel>)
+
+    @Query("DELETE FROM photos WHERE isFavourite == 0")
+    suspend fun deleteCuratePhotos()
+
+    @Transaction
+    suspend fun changeCuratePhotos(curatedPhotos: List<PhotoDbModel>){
+        deleteCuratePhotos()
+        addCuratedPhotos(curatedPhotos)
+    }
+
+    @Insert
+    suspend fun addPhotoToFavourites(photoDbModel: PhotoDbModel)
 }

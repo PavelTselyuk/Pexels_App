@@ -11,7 +11,5 @@ data class PhotoDto(
     @SerialName("photographer")
     val photographer: String = "",
     @SerialName("src")
-    val src: SrcDto = SrcDto(),
-    @SerialName("url")
-    val url: String = "",
+    val src: SrcDto = SrcDto()
 )

@@ -20,4 +20,12 @@ interface PhotosRepository {
 
     suspend fun deleteFromFavoritePhotos(photo: Photo)
 
+
 }
+
+//sealed class ScreenType {
+//
+//    data object HomeScreen : ScreenType()
+//    data object Favourites : ScreenType()
+//
+//}

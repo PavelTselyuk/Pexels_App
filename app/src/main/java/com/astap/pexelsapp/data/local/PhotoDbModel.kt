@@ -7,7 +7,6 @@ import androidx.room.PrimaryKey
 data class PhotoDbModel(
     @PrimaryKey val id: Int = 0,
     val photographer: String = "",
-    val srcOriginal: String="",
-    val url: String = "",
-    val isFavorite: Boolean = false
+    val srcOriginal: String = "",
+    val isFavourite: Boolean = false
 )

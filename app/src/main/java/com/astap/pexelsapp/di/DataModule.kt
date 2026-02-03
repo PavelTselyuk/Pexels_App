@@ -5,7 +5,7 @@ import androidx.room.Room
 import com.astap.pexelsapp.data.local.PexelsDao
 import com.astap.pexelsapp.data.local.PexelsDatabase
 import com.astap.pexelsapp.data.remote.PexelsApiService
-import com.astap.pexelsapp.data.repository.TestPhotosRepositoryImpl
+import com.astap.pexelsapp.data.repository.PhotosRepositoryImpl
 import com.astap.pexelsapp.domain.PhotosRepository
 import dagger.Binds
 import dagger.Module
@@ -28,7 +28,7 @@ interface DataModule {
     @Singleton
     @Binds
     fun bindPhotoRepository(
-        impl: TestPhotosRepositoryImpl
+        impl: PhotosRepositoryImpl
     ): PhotosRepository
 
     companion object {
@@ -47,7 +47,7 @@ interface DataModule {
 
         @Provides
         @Singleton
-        fun provideNewsDao(
+        fun providePexelsDao(
             database: PexelsDatabase
         ): PexelsDao = database.pexelsDao()
 

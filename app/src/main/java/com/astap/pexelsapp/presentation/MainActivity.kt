@@ -2,33 +2,36 @@ package com.astap.pexelsapp.presentation
 
 import android.animation.ObjectAnimator
 import android.os.Bundle
+import android.util.Log
 import android.view.View
 import android.view.animation.OvershootInterpolator
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
-import androidx.activity.viewModels
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.padding
-import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.core.animation.doOnEnd
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
+import androidx.lifecycle.lifecycleScope
+import com.astap.pexelsapp.domain.PhotosRepository
 import com.astap.pexelsapp.presentation.ui.theme.PexelsAppTheme
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @AndroidEntryPoint
 class MainActivity : ComponentActivity() {
 
+    @Inject
+    lateinit var repository: PhotosRepository
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         installSplashScreen().apply {
             setKeepOnScreenCondition {
-//                !viewModel.isReady.value
+
                 false
             }
             setOnExitAnimationListener { screen ->
@@ -59,6 +62,12 @@ class MainActivity : ComponentActivity() {
         }
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
+        lifecycleScope.launch {
+            val responsePhotos = repository.getCuratedPhotos()
+            val responseTopics = repository.getPopularTopics()
+            Log.d("MainActivity", responseTopics.toString())
+            Log.d("MainActivity", responsePhotos.toString())
+        }
         setContent {
             PexelsAppTheme {
 
