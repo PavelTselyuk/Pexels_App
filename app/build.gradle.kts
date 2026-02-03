@@ -1,8 +1,23 @@
+import java.util.Properties
+
 plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.android)
     alias(libs.plugins.kotlin.compose)
+    alias(libs.plugins.kotlin.serialization)
+    alias(libs.plugins.ksp)
+    alias(libs.plugins.hilt.android)
 }
+
+private val keystorePropertiesFile = rootProject.file("keystore.properties")
+private val keystoreProperties = keystorePropertiesFile.inputStream().use { inputStream ->
+    Properties().apply {
+        load(inputStream)
+    }
+}
+private val apiKey = keystoreProperties.getProperty("PEXELS_API_KEY")
+
+
 
 android {
     namespace = "com.astap.pexelsapp"
@@ -16,6 +31,7 @@ android {
         versionName = "1.0"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
+        buildConfigField("String", "PEXELS_API_KEY", apiKey )
     }
 
     buildTypes {
@@ -36,6 +52,7 @@ android {
     }
     buildFeatures {
         compose = true
+        buildConfig = true
     }
 }
 
@@ -51,6 +68,18 @@ dependencies {
     implementation(libs.androidx.material3)
 
     implementation(libs.androidx.core.splashscreen)
+    implementation(libs.kotlinx.coroutines.android)
+    implementation(libs.androidx.lifecycle.viewmodel.compose)
+    implementation(libs.androidx.room.runtime)
+    ksp(libs.androidx.room.compiler)
+    implementation(libs.androidx.room.ktx)
+    implementation(libs.kotlinx.serialization.json)
+    implementation(libs.hilt.android)
+    ksp(libs.hilt.android.compiler)
+    implementation(libs.coil.compose)
+    implementation(libs.coil.network.okhttp)
+    implementation(libs.retrofit)
+    implementation(libs.converter.kotlinx.serialization)
 
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
