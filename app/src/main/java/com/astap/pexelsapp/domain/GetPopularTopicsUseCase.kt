@@ -6,7 +6,7 @@ class GetPopularTopicsUseCase @Inject constructor(
     private val repository: PhotosRepository
 ) {
 
-    suspend operator fun invoke(): List<String> {
+    suspend operator fun invoke(): List<String>? {
         return repository.getPopularTopics()
     }
 }

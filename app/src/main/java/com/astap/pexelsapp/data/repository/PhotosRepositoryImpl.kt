@@ -1,5 +1,6 @@
 package com.astap.pexelsapp.data.repository
 
+import android.util.Log
 import com.astap.pexelsapp.data.local.PexelsDao
 import com.astap.pexelsapp.data.mapper.toDbModel
 import com.astap.pexelsapp.data.mapper.toDbModelList
@@ -13,30 +14,82 @@ import com.astap.pexelsapp.domain.PhotosRepository
 import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.launch
+import java.net.UnknownHostException
+import java.util.concurrent.CancellationException
 import javax.inject.Inject
 
 class PhotosRepositoryImpl @Inject constructor(
     private val pexelsDao: PexelsDao,
     private val pexelsApiService: PexelsApiService
 ) : PhotosRepository {
-    override suspend fun getPopularTopics(): List<String> {
-        val topicsResponseDto = pexelsApiService.loadPopularTopics()
-        coroutineScope {
-            pexelsDao.changeTopics(topicsResponseDto.toDbModelList())
+    override suspend fun getPopularTopics(): List<String>? {
+        val topicsResponseDto = try {
+            pexelsApiService.loadPopularTopics()
+        } catch (e: Exception) {
+            if (e is CancellationException) {
+                throw e
+            }
+            Log.e("PhotosRepository", e.stackTraceToString())
+            if (e is UnknownHostException) {
+                return null
+            }
+            null
         }
-        return topicsResponseDto.toListString()
+
+        coroutineScope {
+            launch {
+                topicsResponseDto?.let {
+                    pexelsDao.changeTopics(topicsResponseDto.toDbModelList())
+                }
+            }
+        }
+
+        return topicsResponseDto?.toListString() ?: listOf()
     }
 
-    override suspend fun getCuratedPhotos(): List<Photo> {
-        val photosResponseDto = pexelsApiService.loadCuratedPhotos()
-        coroutineScope {
-            pexelsDao.changeCuratePhotos(photosResponseDto.toListDbModel())
+    override suspend fun getCuratedPhotos(): List<Photo>? {
+
+        val photosResponseDto = try {
+            pexelsApiService.loadCuratedPhotos()
+        } catch (e: Exception) {
+            if (e is CancellationException) {
+                throw e
+            }
+            Log.e("PhotosRepository", e.stackTraceToString())
+            if (e is UnknownHostException) {
+                return null
+            }
+
+            null
         }
-        return pexelsApiService.loadCuratedPhotos().toListEntity()
+
+        coroutineScope {
+            launch {
+                photosResponseDto?.let {
+                    pexelsDao.changeCuratePhotos(photosResponseDto.toListDbModel())
+                }
+            }
+        }
+
+        return photosResponseDto?.toListEntity() ?: listOf()
+
     }
 
-    override suspend fun getPhotosByTopic(topic: String): List<Photo> {
-        return pexelsApiService.loadPhotosByTopic(topic = topic).toListEntity()
+    override suspend fun getPhotosByTopic(topic: String): List<Photo>? {
+
+        return try {
+            pexelsApiService.loadPhotosByTopic(topic = topic).toListEntity()
+        } catch (e: Exception) {
+            if (e is CancellationException) {
+                throw e
+            }
+            Log.e("PhotosRepository", e.stackTraceToString())
+            if (e is UnknownHostException) {
+                return null
+            }
+            listOf()
+        }
 
     }
 
@@ -44,8 +97,19 @@ class PhotosRepositoryImpl @Inject constructor(
         return pexelsDao.getPhotoById(photoId).toEntity()
     }
 
-    override suspend fun getPhotoFromHomePage(photoId: Int): Photo {
-        return pexelsApiService.loadPhotoById(photoId.toString()).toEntity()
+    override suspend fun getPhotoFromHomePage(photoId: Int): Photo? {
+        return try {
+            pexelsApiService.loadPhotoById(photoId.toString()).toEntity()
+        } catch (e: Exception) {
+            if (e is CancellationException) {
+                throw e
+            }
+            Log.e("PhotosRepository", e.stackTraceToString())
+            if (e is UnknownHostException) {
+                return null
+            }
+            return Photo(id = ID_OF_NON_EXISTED_PHOTO)
+        }
     }
 
     override fun getFavoritePhotos(): Flow<List<Photo>> {
@@ -60,5 +124,9 @@ class PhotosRepositoryImpl @Inject constructor(
 
     override suspend fun deleteFromFavoritePhotos(photo: Photo) {
         pexelsDao.deletePhotoFromFavorites(photo.id)
+    }
+
+    companion object {
+        const val ID_OF_NON_EXISTED_PHOTO = -1
     }
 }

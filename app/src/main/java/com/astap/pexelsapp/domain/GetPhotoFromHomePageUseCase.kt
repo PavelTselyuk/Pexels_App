@@ -6,7 +6,7 @@ class GetPhotoFromHomePageUseCase @Inject constructor(
     private val repository: PhotosRepository
 ) {
 
-    suspend operator fun invoke(photoId: Int): Photo {
+    suspend operator fun invoke(photoId: Int): Photo? {
         return repository.getPhotoFromHomePage(photoId)
     }
 }

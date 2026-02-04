@@ -12,17 +12,17 @@ interface PexelsApiService {
         "authorization: ${BuildConfig.PEXELS_API_KEY}"
     )
 
-    @GET("collections/featured?per_page=7")
+    @GET("collections/featured?per_page=$POPULAR_TOPICS_AMOUNT")
     suspend fun loadPopularTopics(
     ): PopularTopicsResponseDto
 
-    @GET("curated?per_page=30")
+    @GET("curated?per_page=$PHOTOS_AMOUNT_PER_PAGE")
     suspend fun loadCuratedPhotos(
         @Query("page") page: String = "1"
     ): PhotosResponseDto
 
 
-    @GET("search?per_page=30")
+    @GET("search?per_page=$PHOTOS_AMOUNT_PER_PAGE")
     suspend fun loadPhotosByTopic(
         @Query("page") page: String = "1",
         @Query("query") topic: String,
@@ -34,4 +34,9 @@ interface PexelsApiService {
     ): PhotoDto
 
 
+    companion object{
+
+        const val POPULAR_TOPICS_AMOUNT = 7
+        const val PHOTOS_AMOUNT_PER_PAGE = 30
+    }
 }
