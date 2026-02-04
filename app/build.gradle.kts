@@ -85,6 +85,8 @@ dependencies {
     implementation(libs.coil.network.okhttp)
     implementation(libs.retrofit)
     implementation(libs.converter.kotlinx.serialization)
+    implementation(libs.androidx.hilt.navigation.compose)
+    implementation(libs.androidx.material.icons.extended)
 
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)

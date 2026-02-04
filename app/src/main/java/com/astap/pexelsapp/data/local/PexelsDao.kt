@@ -47,6 +47,6 @@ interface PexelsDao {
         addCuratedPhotos(curatedPhotos)
     }
 
-    @Insert
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun addPhotoToFavourites(photoDbModel: PhotoDbModel)
 }

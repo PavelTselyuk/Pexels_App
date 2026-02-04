@@ -56,15 +56,18 @@ class MainActivity : ComponentActivity() {
         }
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
-//        lifecycleScope.launch {
-//            val responsePhotos = repository.getCuratedPhotos()
-//            val responseTopics = repository.getPopularTopics()
-//            Log.d("MainActivity", responseTopics.toString())
-//            Log.d("MainActivity", responsePhotos.toString())
-//        }
         setContent {
             PexelsAppTheme {
-                HomeScreen()
+//                FavouritesScreen(
+//                    onHomePageClick = {  },
+//                    onPhotoClick = {  },
+//                    onExploreClick = {  }
+//                )
+                HomeScreen(
+                    onFavouritesClick = { },
+                    onPhotoClick = { },
+                    onExploreClick = {}
+                )
             }
         }
     }
