@@ -20,7 +20,7 @@ interface PhotosRepository {
 
     suspend fun deleteFromFavoritePhotos(photo: Photo)
 
-
+    suspend fun downloadImageToDevice(photo: Photo)
 }
 
 //sealed class ScreenType {

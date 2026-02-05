@@ -87,6 +87,8 @@ dependencies {
     implementation(libs.converter.kotlinx.serialization)
     implementation(libs.androidx.hilt.navigation.compose)
     implementation(libs.androidx.material.icons.extended)
+    implementation(libs.androidx.navigation3.runtime)
+    implementation(libs.androidx.navigation3.ui)
 
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)

@@ -1,6 +1,11 @@
 package com.astap.pexelsapp.data.repository
 
+import android.app.DownloadManager
+import android.content.Context
+import android.os.Environment
 import android.util.Log
+import android.webkit.MimeTypeMap
+import androidx.core.net.toUri
 import com.astap.pexelsapp.data.local.PexelsDao
 import com.astap.pexelsapp.data.mapper.toDbModel
 import com.astap.pexelsapp.data.mapper.toDbModelList
@@ -11,6 +16,7 @@ import com.astap.pexelsapp.data.mapper.toListString
 import com.astap.pexelsapp.data.remote.PexelsApiService
 import com.astap.pexelsapp.domain.Photo
 import com.astap.pexelsapp.domain.PhotosRepository
+import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
@@ -21,7 +27,8 @@ import javax.inject.Inject
 
 class PhotosRepositoryImpl @Inject constructor(
     private val pexelsDao: PexelsDao,
-    private val pexelsApiService: PexelsApiService
+    private val pexelsApiService: PexelsApiService,
+    @ApplicationContext private val context: Context
 ) : PhotosRepository {
     override suspend fun getPopularTopics(): List<String>? {
         val topicsResponseDto = try {
@@ -94,7 +101,9 @@ class PhotosRepositoryImpl @Inject constructor(
     }
 
     override suspend fun getPhotoFromFavorites(photoId: Int): Photo {
-        return pexelsDao.getPhotoById(photoId).toEntity()
+        return pexelsDao.getPhotoById(photoId)?.toEntity() ?: Photo(
+            id = ID_OF_NON_EXISTED_PHOTO
+        )
     }
 
     override suspend fun getPhotoFromHomePage(photoId: Int): Photo? {
@@ -104,7 +113,7 @@ class PhotosRepositoryImpl @Inject constructor(
             if (e is CancellationException) {
                 throw e
             }
-            Log.e("PhotosRepository", e.stackTraceToString())
+            Log.e("PhotosRepositoryImpl", e.stackTraceToString())
             if (e is UnknownHostException) {
                 return null
             }
@@ -124,6 +133,29 @@ class PhotosRepositoryImpl @Inject constructor(
 
     override suspend fun deleteFromFavoritePhotos(photo: Photo) {
         pexelsDao.deletePhotoFromFavorites(photo.id)
+    }
+
+    override suspend fun downloadImageToDevice(photo: Photo) {
+        val downloadManager = context.getSystemService(DownloadManager::class.java)
+
+        val extension = MimeTypeMap.getFileExtensionFromUrl(photo.src)
+        val type = if (extension != null) {
+            MimeTypeMap.getSingleton().getMimeTypeFromExtension(extension)
+        } else {
+            null
+        }
+        Log.d("PhotosRepository", "type: $type")
+        val fileExtension = type?.split("/")?.last()
+
+        val request = DownloadManager.Request(photo.src.toUri())
+            .setMimeType(type ?: "image/jpg")
+            .setTitle(photo.id.toString())
+            .setDescription("Downloading")
+            .setNotificationVisibility(DownloadManager.Request.VISIBILITY_VISIBLE_NOTIFY_COMPLETED)
+            .setAllowedOverMetered(true)
+            .setDestinationInExternalPublicDir(Environment.DIRECTORY_DOWNLOADS, "${photo.id}.${fileExtension ?: "jpg"}")
+
+        downloadManager.enqueue(request)
     }
 
     companion object {

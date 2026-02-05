@@ -30,7 +30,7 @@ interface PexelsDao {
     fun getFavoritePhotos(): Flow<List<PhotoDbModel>>
 
     @Query("SELECT * FROM photos WHERE id == :id")
-    suspend fun getPhotoById(id: Int): PhotoDbModel
+    suspend fun getPhotoById(id: Int): PhotoDbModel?
 
     @Query("DELETE FROM photos WHERE id ==:photoId")
     suspend fun deletePhotoFromFavorites(photoId: Int)
