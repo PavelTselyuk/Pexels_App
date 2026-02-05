@@ -50,7 +50,6 @@ fun DetailsScreen(
     onBackClick: () -> Unit,
     onExploreClick: () -> Unit
 ) {
-
     val state by viewModel.state.collectAsState()
 
 
