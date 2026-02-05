@@ -36,6 +36,9 @@ class DetailsViewModel @AssistedInject constructor(
     val state = _state.asStateFlow()
 
     init {
+
+        Log.d("DetailsViewModel", "Detail VM is initialized for photo id: $photoId")
+
         viewModelScope.launch {
             val photo = when (source) {
                 FROM_OTHERS -> getPhotoFromHomePageUseCase(photoId)
@@ -109,6 +112,12 @@ class DetailsViewModel @AssistedInject constructor(
             @Assisted("photoId") photoId: Int,
             @Assisted("source") source: Int
         ): DetailsViewModel
+    }
+
+    override fun onCleared() {
+        super.onCleared()
+        Log.d("DetailsViewModel", "Detail VM is cleared for photo id: $photoId")
+
     }
 }
 

@@ -32,7 +32,7 @@ fun FavouritesScreen(
 
 
     Column(
-        modifier = Modifier
+        modifier = modifier
             .fillMaxSize()
             .padding(top = 12.dp),
         verticalArrangement = Arrangement.SpaceBetween
@@ -79,7 +79,7 @@ fun FavouritesScreen(
                 modifier = Modifier,
                 isActive = false,
                 onClick = {
-
+                    onHomePageClick()
                 }
             )
             FavouriteNavigationTab(

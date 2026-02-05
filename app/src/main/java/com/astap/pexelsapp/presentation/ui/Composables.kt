@@ -34,13 +34,11 @@ fun FavouriteNavigationTab(
 ) {
 
     IconToggleButton(
-        modifier = modifier
-            .height(24.dp)
-            .clickable(
-                onClick = onClick
-            ),
+        modifier = modifier.height(24.dp),
         checked = isActive,
-        onCheckedChange = {},
+        onCheckedChange = {
+            onClick()
+        },
     ) {
 
         Icon(
@@ -60,10 +58,9 @@ fun HomeNavigationTab(
 
     IconToggleButton(
         modifier = modifier
-            .height(24.dp)
-            .clickable { onClick() },
+            .height(24.dp),
         checked = isActive,
-        onCheckedChange = { },
+        onCheckedChange = { onClick() },
     ) {
 
         Icon(

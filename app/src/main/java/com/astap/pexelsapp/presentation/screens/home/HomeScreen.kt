@@ -48,8 +48,7 @@ fun HomeScreen(
     modifier: Modifier = Modifier,
     viewModel: HomeScreenViewModel = hiltViewModel(),
     onFavouritesClick: () -> Unit,
-    onPhotoClick: (Int) -> Unit,
-    onExploreClick: () -> Unit
+    onPhotoClick: (Int) -> Unit
 ) {
 
     val state by viewModel.state.collectAsState()

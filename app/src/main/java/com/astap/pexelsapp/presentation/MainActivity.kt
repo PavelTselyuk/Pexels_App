@@ -9,18 +9,12 @@ import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.core.animation.doOnEnd
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
-import com.astap.pexelsapp.domain.PhotosRepository
-import com.astap.pexelsapp.presentation.screens.detail.DetailsScreen
-import com.astap.pexelsapp.presentation.screens.detail.DetailsViewModel
+import com.astap.pexelsapp.presentation.navigation.NavigationRoot
 import com.astap.pexelsapp.presentation.ui.theme.PexelsAppTheme
 import dagger.hilt.android.AndroidEntryPoint
-import javax.inject.Inject
 
 @AndroidEntryPoint
 class MainActivity : ComponentActivity() {
-
-    @Inject
-    lateinit var repository: PhotosRepository
 
     override fun onCreate(savedInstanceState: Bundle?) {
         installSplashScreen().apply {
@@ -60,6 +54,7 @@ class MainActivity : ComponentActivity() {
 
 
             PexelsAppTheme {
+                NavigationRoot()
 //                FavouritesScreen(
 //                    onHomePageClick = {  },
 //                    onPhotoClick = {  },
@@ -72,12 +67,12 @@ class MainActivity : ComponentActivity() {
 //                    onExploreClick = {}
 //                )
                 
-                DetailsScreen(
-                    photoId = 2880507,
-                    source = DetailsViewModel.FROM_OTHERS,
-                    onBackClick = {  },
-                    onExploreClick = {  }
-                ) 
+//                DetailsScreen(
+//                    photoId = 2880507,
+//                    source = DetailsViewModel.FROM_OTHERS,
+//                    onBackClick = {  },
+//                    onExploreClick = {  }
+//                )
             }
         }
     }
